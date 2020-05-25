@@ -1,0 +1,32 @@
+- name: Installs BorgBackup Client
+  hosts: backup
+  become: yes
+  tasks:
+
+  - name: yum install epel-release
+    yum:
+      name: epel-release
+      state: present
+
+  - name: yum install Borg backup
+    yum:
+      name: borgbackup
+      state: present
+  
+  - name: yum install python
+    yum:
+      name:
+        - python
+        - python-pip
+      state: present
+
+  - name: pip install borg
+    command: sudo pip3 install --upgrade borgmatic
+
+  - name: pip install borg
+    command: echo export 'PATH="$PATH:/root/.local/bin"' >> ~/.bashrc
+
+  - name: pip install borg
+    shell: source ~/.bashrc
+
+    

@@ -1,0 +1,88 @@
+- name: installeren van gitlab
+  hosts: gitlab
+  become: yes
+  tasks:
+
+    - name: 'swap: make file'
+      command: dd if=/dev/zero of=/swapfile count=4096 bs=1M
+      ignore_errors: yes
+
+    - name: 'swap: chmod' 
+      file:
+        path: /swapfile 
+        mode: 666
+
+    - name: 'swap: mkswap' 
+      command: mkswap /swapfile
+      ignore_errors: yes
+
+
+    - name: 'swap: swapon'
+      command: swapon /swapfile
+      ignore_errors: yes
+
+
+    - name: 'swap: /etc/fstab'
+      lineinfile:
+        path: /etc/fstab
+        line: /swapfile   none    swap    sw    0   0
+        state: present
+
+    - name: 'swap: set swappiness'
+      sysctl:
+        name: vm.swappiness
+        value: '10'
+        state: present 
+
+    - name: Open port 80
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: Open port 443
+      firewalld:
+        service: https
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: yum install epel-release
+      yum:
+        name:
+          - epel-release
+        state: present
+
+    - name: upgrade all packages
+      yum:
+        name: "*" 
+        state: latest
+
+    - name: yum install dependencies 
+      yum:
+        name:
+          - curl
+          - policycoreutils-python
+          - openssh-server
+        state: present
+
+    - name: start sshd
+      service:
+        name: sshd
+        state: started
+        enabled: yes
+
+    - name: Download gitlab repo installer
+      get_url:
+        url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh
+        dest: /home/ansible/script.rpm.sh
+  
+    - name: install gitlab yum repo
+      command: bash ./script.rpm.sh
+
+    - name: install gitlab
+      shell: EXTERNAL_URL="http://192.168.3.106" yum install -y gitlab-ce
+
+
+

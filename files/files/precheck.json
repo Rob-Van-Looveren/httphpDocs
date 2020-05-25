@@ -1,0 +1,32 @@
+{
+    "vhosts": [
+      {
+      "user": "rvl",
+      "path": "rvl/public_html"
+      },
+      {
+      "user": "temp",
+      "path": "temp/public_html"
+      },
+      {
+      "user": "test",
+      "path": "test/public_html"
+      },
+      {
+      "user": "user",
+      "path": "user/public_html"
+      },
+      {
+      "user": "tee",
+      "path": "tee/public_html"
+      },
+      {
+      "user": "rvl",
+      "path": "rvl/ctf"
+      },
+      {
+      "user": "bobama",
+      "path": "bobama/public_html"
+      }
+      ]
+  }

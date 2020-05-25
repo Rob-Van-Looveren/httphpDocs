@@ -1,0 +1,86 @@
+- name: This sets up an httpd webserver
+  hosts: httpd
+  become: yes
+  tasks:
+  - name: disable selinux
+    lineinfile:
+      path: /etc/selinux/config
+      regexp: '^SELINUX='
+      line: SELINUX=disabled
+      
+  - name: disable SELINUX
+    command: setenforce 0
+    ignore_errors: yes
+
+  - name: Install apache packages 
+    yum:
+      name: httpd
+      state: present
+
+  - name: yum install epel-release
+    yum:
+      name: epel-release
+      state: present
+
+  - name: "Copy /etc/httpd/conf/httpd.conf"
+    copy:
+      src: /home/ansible/files/httpd.conf
+      dest: /etc/httpd/conf/httpd.conf
+      mode: '0777'
+
+  - name: "Copy /etc/httpd/conf.d/proxy.conf"
+    copy:
+      src: /home/ansible/files/proxy.conf
+      dest: /etc/httpd/conf.d/proxy.conf
+      mode: '0777'
+
+  - name: Add REMI  repository
+    yum_repository:
+      name: REMI
+      description: REMI
+      baseurl: https://rpms.remirepo.net/enterprise/7/php73/x86_64/
+      gpgkey: https://rpms.remirepo.net/RPM-GPG-KEY-remi
+      gpgcheck: yes
+      includepkgs: "*"
+      enabled: yes  
+
+  - name: yum install PHP
+    yum:
+      name:
+        - php
+        - php-common
+        - php-opcache
+        - php-mcrypt
+        - php-cli
+        - php-mysqlnd
+        - php-snmp
+        - php-xml
+        - php-mysql
+        - php-bcmath
+      state: present
+
+  - name: ensure httpd is running
+    service:
+      name: httpd 
+      state: restarted
+      enabled: yes
+
+  - name: Open port 80 for http access
+    firewalld:
+      service: http
+      permanent: true
+      state: enabled
+      immediate: true
+
+  - name: Open port 443 for http access
+    firewalld:
+      service: https
+      permanent: true
+      state: enabled
+      immediate: true
+
+
+  - name: Restart the firewalld service to load in the firewall changes
+    service: 
+      name: firewalld 
+      state: restarted

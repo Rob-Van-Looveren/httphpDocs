@@ -1,0 +1,61 @@
+- name: This sets up an NFS share
+  hosts: vsftpd
+  become: yes
+  tasks:
+  - name: Install nfs-utils packages 
+    yum:
+      name: nfs-utils 
+      state: present
+
+  - name: Install rpcbindpackages 
+    yum:
+      name: rpcbind
+      state: present
+
+  - name: enable & start nfs-server
+    service:
+      name: nfs-server
+      state: started
+      enabled: yes
+
+  - name: enable & start rpcbind
+    service:
+      name: rpcbind
+      state: started
+      enabled: yes
+  - name: ansible create directory example
+    file:
+      path: /webfiles
+      state: directory
+      mode: "u=rwx,g=rwx,o=rwx"
+
+  - name: Export share 
+    lineinfile:
+      path: /etc/exports
+      line: /webfiles 192.168.3.0/24(rw,sync,all_squash,anonuid=0,anongid=0)
+
+  - name: reload nfs
+    command: 'exportfs -ra'
+
+  - name: set firewall for mountd
+    firewalld:
+      service: mountd
+      permanent: true
+      state: enabled
+
+  - name: set firewall for rpc-bind
+    firewalld:
+      service: rpc-bind
+      permanent: true
+      state: enabled
+
+  - name: set firewall for nfs
+    firewalld:
+      service: nfs
+      permanent: true
+      state: enabled
+
+  - name: Restart the firewalld service to load in the firewall changes
+    service: 
+      name: firewalld 
+      state: restarted

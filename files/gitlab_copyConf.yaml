@@ -1,0 +1,19 @@
+- name: installeren van gitlab
+  hosts: gitlab
+  become: yes
+  tasks:
+    - name: "Copy /etc/gitlab/gitlab.rb"
+      copy:
+        src: /home/ansible/files/gitlab.rb
+        dest: /etc/gitlab/gitlab.rb
+        mode: "0777"
+
+    - name: "gitlab-ctl reconfigure"
+      shell: gitlab-ctl reconfigure
+
+    - name: "disable signup"
+      shell: "gitlab-rails runner 'ApplicationSetting.last.update_attributes(signup_enabled: false)'"
+
+
+ 
+

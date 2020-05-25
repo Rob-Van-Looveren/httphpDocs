@@ -1,0 +1,20 @@
+- name: This sets up an zammad docker container
+  hosts: docker
+  become: yes
+  tasks:
+    - name: install git
+      yum:
+        name: git
+        state: present
+
+    - name: clone zammad repo
+      git:
+        repo: https://github.com/zammad/zammad-docker-compose.git
+        dest: ./zammad-docker
+
+    - name:
+      command: ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+      ignore_errors: yes
+
+    - name: start script
+      shell: "cd zammad-docker; docker-compose up -d"

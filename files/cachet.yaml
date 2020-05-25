@@ -1,0 +1,35 @@
+- name: This sets up an zammad docker container
+  hosts: docker
+  become: yes
+  tasks:
+    - name: install git
+      yum:
+        name: git
+        state: present
+
+    - name: clone zammad repo
+      git:
+        repo: https://github.com/cachethq/Docker.git
+        dest: ./cachet
+
+    - name: Ensure we have our own comment added to /etc/services
+      lineinfile:
+        path: ./cachet/docker-compose.yml
+        regexp: "80:8000"
+        line: "      - 8008:8000"
+
+    - name: Ensure we have our own comment added to /etc/services
+      lineinfile:
+        path: ./cachet/docker-compose.yml
+        regexp: "- APP_KEY"
+        line: "      - APP_KEY=${APP_KEY:-base64:5dXLttV0JguNO4YEvrbW052nXmeIlyNx+Z6Eq+RF8BY=}"
+
+    - name:
+      command: ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+      ignore_errors: yes
+
+    - name: start script
+      shell: "cd ./cachet; docker-compose build"
+
+    - name: start script
+      shell: "cd ./cachet; docker-compose up -d"

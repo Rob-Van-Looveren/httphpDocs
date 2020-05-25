@@ -1,0 +1,22 @@
+- name: check of map bestaat  
+  stat:
+    path: /webfiles/{{ item.path }}
+  register: dir
+
+- name: Debug Missing Dir
+  when: dir.stat.exists != True
+  debug:
+    msg: "MISSING DIRECTORY /webfiles/{{ item.path }} with uid {{ item.userid }}"
+
+- name: Create Missing Dir with user as owner
+  when: dir.stat.exists != True
+  file:
+    path: /webfiles/{{ item.path }}
+    state: directory
+    mode: '0755'
+    owner: '{{ item.userid }}'
+    group: 1501
+    recurse: yes
+ # ignore_errors: yes
+  register: cmd
+

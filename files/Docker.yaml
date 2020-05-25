@@ -1,0 +1,79 @@
+- name: Installs Docker
+  hosts: docker
+  become: yes
+  tasks:
+
+    - name: Install yum-util
+      yum:
+        name: yum-utils
+        state: present
+
+    - name: Add Docker repository
+      yum_repository:
+        name: Docker
+        description: Docker
+        baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
+        gpgkey: https://download.docker.com/linux/centos/gpg
+        gpgcheck: yes
+        includepkgs: "*"
+        enabled: yes  
+
+    - name: Install Docker, Docker-cli
+      yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+
+    - name: Start & enable docker service
+      service:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: "Add ansible to Docker group"
+      command: usermod -aG docker ansible
+
+    - name: "Add Root to Docker group"
+      command: usermod -aG docker root
+
+
+    - name: "Install docker-compose"
+      command: curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
+
+    - name: "Set execution permissions docker-compose"
+      file:
+        path: /usr/local/bin/docker-compose
+        mode: u+x,g+x,o+x
+
+    - name: "Firewall allow 80/tcp"
+      firewalld:
+        port: 80/tcp
+        permanent: yes
+        state: enabled
+        zone: public
+
+    - name: "Firewall allow 443/tcp"
+      firewalld:
+        port: 443/tcp
+        permanent: yes
+        state: enabled
+        zone: public
+
+    - name: "Firewall allow 9000/tcp"
+      firewalld:
+        port: 9000/tcp
+        permanent: yes
+        state: enabled
+        zone: public
+
+
+    - name: "create docker volume portainer"
+      shell: docker volume create portainer_data
+
+    - name: "create docker volume portainer"
+      shell: docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+    
+

@@ -1,0 +1,23 @@
+- name: installeren van mariadb
+  hosts: mariadb
+  become: yes
+  vars_files:
+    temp.txt
+  tasks:
+
+    - name: check var pwd
+      debug:
+        msg: pwd "{{ pwd }}"
+
+    - name: check var user
+      debug:
+        msg: user "{{ user }}"
+
+    - name: Create mysql user 
+      mysql_user:
+        name: "{{ user }}"
+        host: '%'
+        password: "{{ pwd }}"
+        priv: "{{ user }}_%.*:ALL"
+        state: present
+

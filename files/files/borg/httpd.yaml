@@ -1,0 +1,15 @@
+location:
+  source_directories:
+    - /etc/httpd/*
+    - /var/log/httpd/*
+  repositories:
+    - ansible@192.168.3.108:/backups/httpd
+storage:
+  encryption_passphrase: ""
+retention:
+  keep_daily: 7
+  keep_weekly: 7
+  keep_monthly: 4
+  keep_yearly: 12
+hooks:
+  healthchecks: https://hc-ping.com/ede900c9-b563-4c74-82dc-dc8b804c75bb

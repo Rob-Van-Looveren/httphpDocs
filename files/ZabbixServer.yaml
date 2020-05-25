@@ -1,0 +1,153 @@
+- name: This sets up an httpd webserver
+  hosts: zabbix
+  become: yes
+  tasks:
+  - name: disable selinux
+    lineinfile:
+      path: /etc/selinux/config
+      regexp: '^SELINUX='
+      line: SELINUX=disabled
+
+  - name: yum install epel-release
+    yum:
+      name: epel-release
+      state: present
+
+  - name: Add Zabbix repository
+    yum_repository:
+      name: Zabbix
+      description: Zabbix
+      baseurl: https://repo.zabbix.com/zabbix/4.4/rhel/7/x86_64/
+      gpgkey: https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-A14FE591
+      gpgcheck: yes
+      includepkgs: "*"
+      enabled: yes
+
+  - name: yum install zabbix-server-mysql
+    yum:
+      name: zabbix-server-mysql
+      state: present
+
+  - name: yum install zabbix-web-mysql
+    yum:
+      name: zabbix-web-mysql
+      state: present
+
+  - name: yum install httpd
+    yum:
+      name: httpd
+      state: present
+
+  - name: ensure httpd is running
+    service:
+      name: httpd 
+      state: started
+      enabled: yes
+
+  - name: yum install PHP
+    yum:
+      name:
+        - php 
+        - php-pear
+        - php-cgi
+        - php-common
+        - php-mbstring
+        - php-snmp
+        - php-gd
+        - php-xml
+        - php-mysql
+        - php-gettext
+        - php-bcmath
+      state: present
+
+  - name: "Copy /etc/php.ini"
+    copy:
+      src: /home/ansible/files/php.ini
+      dest: /etc/php.ini
+      mode: 777
+
+  - name: ensure httpd is running
+    service:
+      name: httpd 
+      state: restarted
+      enabled: yes
+
+  - name: yum install MariaDB
+    yum:
+      name: mariadb-server
+      state: present
+
+  - name: start mariadb
+    service:
+      name: mariadb
+      state: started
+      enabled: yes
+
+  - name: Create Zabbix SQL USER
+    shell: |
+      export zabbix_db_pass="zabbix1234"
+      mysql -uroot -e "
+      create database zabbix  character set utf8 collate utf8_bin;
+      grant all privileges on zabbix.* to zabbix@'localhost' identified by '${zabbix_db_pass}';
+      FLUSH PRIVILEGES;"
+
+  - name: Create import SQL
+    shell: zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -pzabbix1234 zabbix
+
+
+  - name: "Copy Zabbix_server.conf"
+    copy:
+      src: /home/ansible/files/zabbix_server.conf
+      dest: /etc/zabbix/zabbix_server.conf
+      mode: 777
+
+  - name: start Zabbix-Server
+    service:
+      name: zabbix-server
+      state: started
+      enabled: yes
+
+  - name: Open port 80
+    firewalld:
+      service: http
+      permanent: true
+      state: enabled
+      immediate: yes
+
+  - name: Open port 443
+    firewalld:
+      service: https
+      permanent: true
+      state: enabled
+      immediate: yes
+
+  - name: Open port 3306
+    firewalld:
+      service: mysql
+      permanent: true
+      state: enabled
+      immediate: yes
+
+  - name: Open port zabbix-agent
+    firewalld:
+      service: zabbix-agent
+      permanent: true
+      state: enabled
+      immediate: yes
+
+
+  - name: Open port zabbix-trapper TCP
+    firewalld:
+      port: 10051/tcp
+      permanent: true
+      state: enabled
+      immediate: yes
+
+  - name: Open port zabbix-trapper UDP
+    firewalld:
+      port: 10051/udp
+      permanent: true
+      state: enabled
+      immediate: yes
+
+

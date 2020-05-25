@@ -1,0 +1,49 @@
+- name: This sets up an httpd webserver
+  hosts: all
+  become: yes
+  tasks:
+    - name: yum install epel-release
+      yum:
+        name: epel-release
+        state: present
+
+    - name: Add Zabbix repository
+      yum_repository:
+        name: Zabbix
+        description: Zabbix
+        baseurl: https://repo.zabbix.com/zabbix/4.4/rhel/7/x86_64/
+        gpgkey: https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-A14FE591
+        gpgcheck: yes
+        includepkgs: "*"
+        enabled: yes
+
+    - name: yum install zabbix-agent
+      yum:
+        name: zabbix-agent
+        state: present
+
+    - name: "Copy Zabbix_server.conf"
+      copy:
+        src: /home/ansible/files/zabbix_agentd.conf
+        dest: /etc/zabbix/zabbix_agentd.conf
+        mode: "0777"
+
+    - name: Hostname zabbix
+      lineinfile:
+        path: /etc/zabbix/zabbix_agentd.conf
+        state: present
+        regexp: 'Hostname\=system.hostname'
+        line: "Hostname={{ ansible_facts['nodename'] }}"
+
+    - name: Open port zabbix-agent
+      firewalld:
+        service: zabbix-agent
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: start Zabbix-Server
+      service:
+        name: zabbix-agent
+        state: restarted
+        enabled: yes

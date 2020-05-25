@@ -1,0 +1,28 @@
+- name: Installs bitwarden
+  hosts: docker
+  become: yes
+  tasks:
+    - name: "Get bitwarden"
+      command: curl -Lso bitwarden.sh https://go.btwrdn.co/bw-sh
+
+    - name: "Set executions permissions for bitwarden"
+      file:
+        path: /home/ansible/bitwarden.sh
+        mode: u+x,g+x,o+x
+
+    - name: "bitwarden init"
+      shell: "bash ./bitwarden.sh install"
+
+    - name: "Firewall allow 80/tcp"
+      firewalld:
+        port: 80/tcp
+        permanent: yes
+        state: enabled
+        zone: public
+
+    - name: "Firewall allow 443/tcp"
+      firewalld:
+        port: 443/tcp
+        permanent: yes
+        state: enabled
+        zone: public

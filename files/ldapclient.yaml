@@ -1,0 +1,21 @@
+- name: Configure ldap client authentication
+  hosts: vsftpd
+  become: yes
+  tasks:
+  - name: Install openldap package
+    yum:
+      name: openldap
+      state: present
+
+  - name: Install openldap-clients package
+    yum:
+      name: openldap-clients
+      state: present
+
+  - name: Install nss-pam-ldapd packages 
+    yum:
+      name: nss-pam-ldapd
+      state: present
+ 
+  - name: config ldap client 
+    command: 'authconfig --enableldap --enableldapauth --ldapserver=192.168.3.101 --ldapbasedn="dc=httphp,dc=local" --enablemkhomedir --update'

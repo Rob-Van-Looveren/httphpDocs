@@ -1,0 +1,73 @@
+- name: Installs & configs vsftpd
+  hosts: vsftpd
+  become: yes
+  tasks:
+  - name: disable selinux
+    lineinfile:
+      path: /etc/selinux/config
+      regexp: '^SELINUX='
+      line: SELINUX=disabled
+      
+  - name: disable SELINUX
+    command: setenforce 0
+
+  - name: Install vsftpd packages 
+    yum:
+      name: vsftpd
+      state: present
+
+  - name: Open port 20 for FTP access
+    firewalld:
+      port: 20/tcp
+      permanent: true
+      state: enabled
+      immediate: true
+
+  - name: Open port 21 for FTP access
+    firewalld:
+      port: 21/tcp
+      permanent: true
+      state: enabled
+      immediate: true
+
+  - name: Open port 21 for FTP access
+    firewalld:
+      service: ftp
+      permanent: true
+      state: enabled
+      immediate: true
+      
+  - name: "Copy /etc/vsftpd/vsftpd.conf"
+    copy:
+      src: /home/ansible/files/vsftpd/vsftpd.conf
+      dest: /etc/vsftpd/vsftpd.conf
+      mode: '0777'
+
+  - name: "SKEL: public_html dir"
+    file:
+      path: /etc/skel/public_html
+      state: directory
+      mode: '0755'
+      owner: root
+      group: root
+
+  - name: "SKEL: www symlink "
+    file:
+      src: ./public_html
+      dest: /etc/skel/www
+      state: link
+      mode: '0755'
+      owner: root
+      group: root
+
+  - name: "SKEL: Index hmtl file"
+    copy:
+      src: /home/ansible/files/skel.html
+      dest: /etc/skel/public_html/index.html
+      mode: '0777'
+
+  - name: restart vsftpd
+    service:
+      name: vsftpd 
+      state: restarted
+      enabled: true

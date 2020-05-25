@@ -1,0 +1,161 @@
+- name: installeren van mariadb
+  hosts: mariadb
+  become: yes
+  vars:
+    password: "{{ mysqlpwd }}"
+
+  tasks:
+    - name: check var
+      debug:
+        msg: pwd "{{ mysqlpwd }}"
+
+    - name: Add repository
+      yum_repository:
+        name: MariaDb
+        description: MariaDB
+        baseurl: http://yum.mariadb.org/10.4/centos7-amd64
+        gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+        gpgcheck: yes
+        includepkgs: "*"
+        enabled: yes
+
+    - name: yum install epel-release
+      yum:
+        name:
+          - epel-release
+        state: present
+
+    - name: yum install python
+      yum:
+        name:
+          - python
+          - python-pip
+          - python-setuptools
+        state: present
+
+    - name: pip install PyMySQL
+      command: pip install PyMySQL
+
+    - name: install MariaDB 10.4
+      yum:
+        name:
+          - MariaDB-server
+          - MariaDB-client
+          - epel-release
+        state: present
+
+    - name: start mariadb
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Make sure pymysql is present
+      pip:
+        name: PyMySQL
+        state: present
+
+    - name: mysql_root_password
+      command: mysql -e "CREATE USER 'admin'@'localhost' IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('{{ password }}');GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION; ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ password }}';FLUSH PRIVILEGES;";
+      ignore_errors: yes
+
+    - name: Mysql_Secure_install
+      shell: password={{ password }} ; echo -e "$password\ny\nn\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation ; password="echo -e \e[5m\e[93mnice try\!\e[25m\n\e[32midentity theft is not a joke\e[36m -Jim\e[39m"
+
+    - name: "store creds"
+      blockinfile:
+        path: /root/.my.cnf
+        create: yes
+        block: |
+          # creds for mariadb
+          [client]
+          user=admin
+          password="{{ password }}"
+
+    - name: Create mysql user httphp
+      mysql_user:
+        name: httphp
+        password: httphp
+        priv: "*.*:ALL"
+        state: present
+
+    - name: Install Apache
+      yum:
+        name:
+          - httpd
+          - mod_ssl
+
+    - name: Install Apache
+      yum:
+        name:
+          - php
+          - php-mysql
+
+    - name: Enable and start Apache
+      systemd:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Open port 80
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: Open port 443
+      firewalld:
+        service: https
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: Open port 3306
+      firewalld:
+        service: mysql
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: Ensure phpMyAdmin is installed.
+      yum:
+        name: phpmyadmin
+        state: present
+
+    - name: "Copy /etc/httpd/conf.d/phpMyAdmin.conf"
+      copy:
+        src: /home/ansible/files/phpMyAdmin.conf
+        dest: /etc/httpd/conf.d/phpMyAdmin.conf
+        mode: "0777"
+
+    - name: hide information_schema
+      lineinfile:
+        path: /etc/phpMyAdmin/config.inc.php
+        regexp: "hide_db"
+        line: $cfg['Servers'][$i]['hide_db'] = '^information_schema$';
+
+    - name: Copy costum imgages for phpmyadmin
+      copy: src=files/{{ item.src }} dest=/usr/share/phpMyAdmin/themes/pmahomme/img/
+      with_items:
+        - { src: "left_nav_bg.png" }
+        - { src: "logo_left.png" }
+        - { src: "logo_right.png" }
+
+    - name: "Copy /etc/my.cnf.d/server.cnf"
+      copy:
+        src: /home/ansible/files/server.cnf
+        dest: /etc/my.cnf.d/server.cnf
+        mode: "0777"
+
+    - name: start mariadb
+      service:
+        name: mariadb
+        state: restarted
+        enabled: true
+
+    - name: Enable and start Apache
+      systemd:
+        name: httpd
+        state: restarted
+        enabled: true

@@ -1,0 +1,17 @@
+- name: enable ntpd
+  hosts: all
+  become: yes
+  tasks:
+    - name: yum install ntp
+      yum:
+        name: ntp
+        state: present
+
+    - name: Enable ntp
+      command: /usr/bin/timedatectl set-ntp true
+
+    - name: start mariadb
+      service:
+        name: ntpd
+        state: started
+        enabled: true

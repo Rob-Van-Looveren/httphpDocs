@@ -1,0 +1,21 @@
+- name: replace vhosts
+  hosts: vsftpd
+  become: yes
+  vars_files:
+    - files/precheck.json
+  tasks:
+    - name: Get vhosts from app
+      uri:
+#       url: http://192.168.3.20/httphp/index.php/Admin/preCheckVhosts?temp=temp
+        url: http://192.168.3.101/index.php/Admin/preCheckVhosts?temp=temp
+        return_content: yes
+      register: this
+
+    - name: "Debug" 
+      debug:
+        var: this.json
+
+    - name: "Loop"
+      loop: "{{ this.json }}" 
+      include_tasks: preCheckSub.yaml
+

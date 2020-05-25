@@ -1,0 +1,25 @@
+- name: This sets up an NFS Client
+  hosts: httpd
+  become: yes
+  tasks:
+  - name: Install nfs-utils packages 
+    yum:
+      name: nfs-utils 
+      state: present
+
+  - name: create mount directory /mnt/webfile
+    file:
+      path: /mnt/webfiles
+      state: directory
+      mode: "u=rwx,g=rwx,o=rwx"
+
+  - name: add mount to /etc/fstab 
+    lineinfile:
+      path: /etc/fstab
+      line: 192.168.3.103:/webfiles /mnt/webfiles    nfs     nosuid,rw,sync,hard,intr  0  0
+
+
+  - name: mount 
+    command: 'mount -a'
+    args:
+      warn: false

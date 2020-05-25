@@ -1,0 +1,25 @@
+- name: replace vhosts
+  hosts: httpd
+  become: yes
+  tasks:
+    - name: "vhost"
+      copy:
+        src: /home/ansible/files/vhosts.conf
+        dest: /etc/httpd/conf.d/vhosts.conf
+        mode: '0755'
+
+    - name: get vhost
+      get_url:
+#	url: http://192.168.3.20/httphp/index.php/Admin/vhostConfig?temp=temp
+        url: http://192.168.3.101/index.php/Admin/vhostConfig?temp=temp
+        dest: /etc/httpd/conf.d/vhosts.conf
+        mode: '0755'
+   
+    - name: restart httpd
+      service:
+        name: httpd
+        enabled: yes
+        state: restarted
+
+    
+

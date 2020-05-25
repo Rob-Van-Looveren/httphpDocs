@@ -1,0 +1,178 @@
+- name: Local LAMP stack
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: disable selinux
+      lineinfile:
+        path: /etc/selinux/config
+        regexp: "^SELINUX="
+        line: SELINUX=disabled
+    - name: disable SELINUX
+      command: setenforce 0
+
+    - name: yum install epel-release
+      yum:
+        name: epel-release
+        state: present
+
+    - name: Install Apache
+      yum:
+        name:
+          - httpd
+          - mod_ssl
+
+    - name: Add PHP REMI repository
+      yum_repository:
+        name: REMI
+        description: REMI
+        baseurl: https://rpms.remirepo.net/enterprise/7/php73/x86_64/
+        gpgkey: https://rpms.remirepo.net/RPM-GPG-KEY-remi
+        gpgcheck: yes
+        includepkgs: "*"
+        enabled: yes
+
+    - name: Add PHP REMI SAFE repository
+      yum_repository:
+        name: REMI-Safe
+        description: REMI-Safe
+        baseurl: https://rpms.remirepo.net/enterprise/7/safe/x86_64
+        gpgkey: https://rpms.remirepo.net/RPM-GPG-KEY-remi
+        gpgcheck: yes
+        includepkgs: "*"
+        enabled: yes
+
+
+    - name: yum install PHP
+      yum:
+        name:
+          - php
+          - php-common
+          - php-opcache
+          - php-mcrypt
+          - php-cli
+          - php-mysqlnd
+          - php-snmp
+          - php-xml
+          - php-mysql
+          - php-bcmath
+          - php-ldap
+        state: present
+
+    - name: Add MariaDB repository
+      yum_repository:
+        name: MariaDb
+        description: MariaDB
+        baseurl: http://yum.mariadb.org/10.4/centos7-amd64
+        gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+        gpgcheck: yes
+        includepkgs: "*"
+        enabled: yes
+
+    - name: yum install python
+      yum:
+        name:
+          - python
+          - python-pip
+          - python-setuptools
+        state: present
+
+    - name: pip install PyMySQL
+      command: pip install PyMySQL
+
+    - name: install MariaDB 10.4
+      yum:
+        name:
+          - MariaDB-server
+          - MariaDB-client
+          - epel-release
+        state: present
+
+    - name: start mariadb
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Make sure pymysql is present
+      pip:
+        name: PyMySQL
+        state: present
+
+    - name: mysql_root_password
+      command: mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'spruitkool'";
+      ignore_errors: yes
+
+    - name: create httphp user
+      command: mysql -uroot -pspruitkool -e "CREATE USER 'httphp'@'%' IDENTIFIED BY 'httphp';";
+      ignore_errors: yes
+
+    - name: grant rights to httphp user
+      command: mysql -uroot -pspruitkool -e "GRANT ALL PRIVILEGES ON *.* TO 'httphp'@'%';";
+      ignore_errors: yes
+
+    - name: Enable and start Apache
+      systemd:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Ensure phpMyAdmin is installed.
+      yum:
+        name: phpmyadmin
+        state: present
+
+    - name: Create a directory if it does not exist
+      file:
+        path: /httphp/
+        state: directory
+        mode: "0755"
+
+    - name: "Copy /httphp/index.html"
+      copy:
+        src: /home/ansible/files/master/index.html
+        dest: /httphp/index.html
+        mode: "0777"
+
+    - name: "Copy /etc/httpd/conf/httpd.conf"
+      copy:
+        src: /home/ansible/files/master/httpd.conf
+        dest: /etc/httpd/conf/httpd.conf
+        mode: "0777"
+
+    - name: "Copy /etc/httpd/conf.d/phpMyAdmin.conf"
+      copy:
+        src: /home/ansible/files/master/phpMyAdmin.conf
+        dest: /etc/httpd/conf.d/phpMyAdmin.conf
+        mode: "0777"
+
+    - name: "Copy /etc/my.cnf.d/server.cnf"
+      copy:
+        src: /home/ansible/files/master/server.cnf
+        dest: /etc/my.cnf.d/server.cnf
+        mode: "0777"
+
+    - name: Open port 80
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: Open port 443
+      firewalld:
+        service: https
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: start mariadb
+      service:
+        name: mariadb
+        state: restarted
+        enabled: true
+
+    - name: Enable and start Apache ---- TO DO MySQLQsecureInstall
+      systemd:
+        name: httpd
+        state: restarted
+        enabled: true
