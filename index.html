@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Home</title>
+  <meta name="description" content="Documentation for small projects">
+
+	<link rel="icon" href="/assets/images/favicon.png">
+  <link rel="canonical" href="https://github.com/alexander-heimbuch/millidocs/">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="/assets/css/httphp.css">
+
+</head>
+
+
+<body>
+	<div>
+		<div class="bg-secondary p-0" id="sidebar">
+	<div class="sidebar-mobile">
+		<!-- <img src="/assets/images/menu.svg" class="menu-icon" id="menu" />
+		<img src="/assets/images/close.svg" class="close-icon" id="close" /> -->
+	</div>
+	<a href="/"><img class="img-fluid p-2 py-3 bg-own " src="/assets/images/httphp.png" /></a>
+	<div class="">
+		<ul class="nav flex-column">							<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/CentOS.html">					Centos				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Ansible.html">					Ansible				</a>							</li>												<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2%20copy.html">					children				</a>							</li>											<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2.html">					child				</a>							</li>											<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/OpenLDAP.html">					OpenLDAP				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/inventory.html">					Inventory				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/github-pages.html">					Github Pages				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Borg.html">					Borg				</a>							</li>																	</ul>
+
+	</div>
+</div>
+		<div id="main" class="row mr-0">
+			<div class="col-12 col-lg-9  col-xl-10 pt-4 pl-6">
+				<h2 id="beschrijving">Beschrijving</h2>
+
+<p> </p>
+
+<h3 id="master">Master</h3>
+<ul>
+  <li>Ansible</li>
+  <li>OpenLDAP</li>
+  <li>Mangement applicatie</li>
+</ul>
+
+<p><img src="/assets/images/ansible.png" alt="" /></p>
+
+<p>Is het hart van het systeem. Vanaf hier worden ansible playbooks uitgevoerd om andere hosts te configueren en instellingen aan te passen.<br />
+Daarnaast worden hier ook user beheerd via OpenLDAP, dit zorgt er voor dat we een centrale service hebben voor het beheren van gebruikers.<br />
+Ten slote draait hier een lokale LAMP stack waarop het management systeem draait</p>
+
+<p><em><strong>Waarom keuze opsplitsing LAMP stack</strong></em></p>
+
+<h3 id="webserver">Webserver</h3>
+<ul>
+  <li>Apache</li>
+  <li>php7.3</li>
+  <li>NFS-client</li>
+</ul>
+
+<p>Hier draait de apache webserver. De webserver heeft een NFS mount naar de webfiles van de gebruikers. <br />
+Momenteel werkt deze webserver ook als reverse proxy voor de services op de docker host. <br />
+De virtualhosts configuratie worden via aan ansible playbook geupdate. <br />
+Voor SSL is er momenteel een self-signed wildcard certificaat aanwezig.</p>
+
+<h3 id="ftp">FTP</h3>
+<ul>
+  <li>vsftpd</li>
+  <li>NFS-server</li>
+  <li>LDAP-client</li>
+</ul>
+
+<p>Op deze machine is een NFS-server aanwezig, Dit zorgt er voor dat de webserver aan de bestanden van de gebruiker kan.<br />
+gebruikers kunnen via FTP bestanden uploaden naar de server. <br />
+Via de LDAP client kunnen gebruiker gegevens geraadpleegt worden en via ftp dus aanmelden. <br /></p>
+
+<h3 id="database">Database</h3>
+<ul>
+  <li>Mariadb 10.4.13</li>
+  <li>phpMyAdmin</li>
+</ul>
+
+<p>Op de machine draait een recente versie van MariaDB (10.4), en dus niet de default versie 5.5. <br />
+Natuurlijk is phpMyAdmin geinstalleerd om gebruiker eenvoudig toegang te geven. <br /></p>
+
+<h3 id="docker">Docker</h3>
+<p>Op de docker client draaien verschillende containers voor ondersteunende services.</p>
+
+<h5 id="helpdesk">Helpdesk</h5>
+<ul>
+  <li>Zammad</li>
+</ul>
+
+<p>Via Zammad kan je eenvoudig tickets aanmaken. Dankzij de integratie met LDAP kunnen gebruikers gewoon aanmelden met hun account.<br />
+Je kan tickets toewzijzen en in team oplossen alvorens af te sluiten.<br />
+Daarnaast kan je binnen Zammad een knowledge base opstellen, ideaal voor een FAQ of om documentatie te plaatsen</p>
+
+<h5 id="password-vault">Password vault</h5>
+<ul>
+  <li>Bitwarden</li>
+</ul>
+
+<p>Bitwarden is een opensource password vault. Een password manager die je zelf kan hosten. <br />
+Je kan je persoonlijke vault exporteren eenvoudig migreren naar andere Bitwarden instances. <br />
+De Enterprise versie van Bitwarden ondersteunt LDAP integratie.</p>
+
+<h5 id="status">Status</h5>
+<ul>
+  <li>Cachet</li>
+</ul>
+
+<p>Via cachet kan je een status pagina opstellen. je kan hier de verschillende services tonen met hun bijhorende status.<br />
+Je kan eventueel ook via een API een status aanpassen. <br /></p>
+
+<h5 id="cloud">Cloud</h5>
+<ul>
+  <li>ownCloud</li>
+</ul>
+
+<p>Via owncloud kan je files uploaden en beheren in de cloud. <br />
+Gebruikers kunnen via LDAP credentials aanmelden. <br /></p>
+
+<h3 id="git">Git</h3>
+<ul>
+  <li>gitlab</li>
+</ul>
+
+<p>De bekende tegenhanger van github, de community edition is gratis en kan je zelf hosten<br />
+Gebruikers kunnen aanmelden via hun LDAP credentials <br />
+Ideaal voor gebruiker die een prive Repository willen maar niet willen betalen voor github.</p>
+
+<h3 id="monitoring">Monitoring</h3>
+<ul>
+  <li>Zabbix</li>
+</ul>
+
+<p>Via Zabbix kunnen we de andere machines en services monitoren. We kunnen hier mee anticiperen bij opkomende problemen zoals schijven die vol lopen. <br />
+Alle machine’s hebben een Zabbix agent die info verzend naar de server. <br />
+Zabbix is zeer uitgebreid en bied veel mogelijkheden, wat ook bijdraagt aan de complexiteit.</p>
+
+<h3 id="backup-server">Backup server</h3>
+<ul>
+  <li>Borg Backup</li>
+  <li>Borgmatic</li>
+</ul>
+
+<p>Borg is een <code>deduplicating</code> programma om backups te maken. Borg wordt op elke host geinstalleerd via een ansible script. <br />
+Daarnaast maken we gebruik van borgmatic. een wrapper die de configuratie zeer gebruiksvriendelijk maakt. <br />
+Zo kunnen we eenvoudig instellen welke bestanden te backuppen en naar welke opslag plaats, ook de retentie kan bepaald worden. <br />
+Integratie met cronjobs en terugkoppelng met een aantal opties is eenvoudig. <br />
+Via Borg kunnen we onze backups encrypteren voor veilige opslag.</p>
+
+
+
+			</div>
+			<div class="d-none d-lg-block col-lg-3 col-xl-1 pt-4" id="titles">
+			</div>
+		</div>
+		<script src="/assets/js/zepto.min.js"></script>
+<script src="/assets/js/lunar.min.js"></script>
+<script src="/assets/js/prism.min.js"></script>
+<script src="/assets/js/database.js"></script>
+<script src="/assets/js/search.js"></script>
+<script src="/assets/js/mobile-navigation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $("img").addClass("img-fluid")
+    $("table").addClass("table table-hover")
+
+
+    $(document).ready(function () {
+        result = "";
+        list = $("h1[data-side], h2[data-side], h3[data-side], h4[data-side]")
+        list.each(function () {
+            indent = ($(this).prop("tagName").substring(1)) - 1
+            indent = "&nbsp;&nbsp;".repeat(indent)
+            result += indent + "<a href='#" + this.id + "''>" + $(this).data("side") + "</a><br>"
+        })
+        $("#titles").html(result)
+
+
+
+    });
+</script>
+</body>
+
+</html>

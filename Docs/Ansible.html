@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Ansible</title>
+  <meta name="description" content="Documentation for small projects">
+
+	<link rel="icon" href="/assets/images/favicon.png">
+  <link rel="canonical" href="https://github.com/alexander-heimbuch/millidocs/Docs/Ansible.html">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="/assets/css/httphp.css">
+
+</head>
+
+
+<body>
+	<div>
+		<div class="bg-secondary p-0" id="sidebar">
+	<div class="sidebar-mobile">
+		<!-- <img src="/assets/images/menu.svg" class="menu-icon" id="menu" />
+		<img src="/assets/images/close.svg" class="close-icon" id="close" /> -->
+	</div>
+	<a href="/"><img class="img-fluid p-2 py-3 bg-own " src="/assets/images/httphp.png" /></a>
+	<div class="">
+		<ul class="nav flex-column">							<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/CentOS.html">					Centos				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 active" href="/Docs/Ansible.html">					Ansible				</a>							</li>												<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2%20copy.html">					children				</a>							</li>											<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2.html">					child				</a>							</li>											<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/OpenLDAP.html">					OpenLDAP				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/inventory.html">					Inventory				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/github-pages.html">					Github Pages				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Borg.html">					Borg				</a>							</li>																	</ul>
+
+	</div>
+</div>
+		<div id="main" class="row mr-0">
+			<div class="col-12 col-lg-9  col-xl-10 pt-4 pl-6">
+				<h1 id="ansible">Ansible</h1>
+
+<p>Start VM</p>
+
+<h3 id="change-default-settings">Change default settings</h3>
+<ul>
+  <li>Verander default password van root <code>passwd</code></li>
+  <li>Stel statisch IP adres in <code>/etc/sysconfig/network-scripts/ifcfg-eth0</code></li>
+  <li>Herlaad network services via <code>service network restart</code></li>
+  <li>stel hostname in <code>hostnamectl set-hostname &lt;HOSTNAME&gt;oot</code></li>
+  <li>pas /etc/hosts aan</li>
+  <li>reboot</li>
+</ul>
+
+<h3 id="optioneel">optioneel</h3>
+<pre><code>nano /etc/ssh/sshd_config
+banner /etc/banner
+service sshd restart
+</code></pre>
+
+<p>http://patorjk.com/software/taag/#p=display&amp;f=Big&amp;t=httpd</p>
+
+<h2 id="ansible-instaleren">Ansible instaleren</h2>
+<pre><code>yum update -y
+yum install epel-release -y
+yum install ansible -y
+test installatie ```ansible --version```
+</code></pre>
+
+<h1 id="user-toevoegen-op-master">user toevoegen op master</h1>
+<pre><code>sudo useradd ansible
+sudo usermod -aG wheel ansible
+sudo passwd ansible
+sed -i 's/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/g' /etc/sudoers
+
+sudo su - ansible; cd
+ssh-keygen
+</code></pre>
+
+<pre><code>[ansible@master ~]$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/ansible/.ssh/id_rsa):
+Created directory '/home/ansible/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/ansible/.ssh/id_rsa.
+Your public key has been saved in /home/ansible/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:SVzvnqARSeI7EUhsxEDr3pjRLK/1rnp/9LI2bAvrf8o ansible@master
+The key's randomart image is:
++---[RSA 2048]----+
+| .o*o.o . .      |
+|   .=. = o .     |
+|  ..  o =   .    |
+| . o   + o .     |
+|  + o o S . .    |
+| . B   ..o o .   |
+|  + + .o..  o    |
+|   o.. +B o      |
+|  oo.=*=EB       |
++----[SHA256]-----+
+[ansible@master ~]$
+
+</code></pre>
+
+<h2 id="ansible-op-slave-instellen">ansible op slave instellen</h2>
+<h3 id="op-slave">op slave</h3>
+<ul>
+  <li>sudo useradd ansible</li>
+  <li>sudo usermod -aG wheel ansible</li>
+  <li>sudo passwd ansible</li>
+  <li>sed -i ‘s/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/g’ /etc/sudoers
+    <h3 id="op-master">op master</h3>
+  </li>
+  <li>sudo su - ansible; cd</li>
+  <li>sudo nano /etc/ansible/hosts</li>
+  <li>slave toevoegen</li>
+  <li>master ansible_host=192.168.3.101</li>
+  <li>ssh-copy-id ansible@<IP SLAVE=""></IP></li>
+</ul>
+
+<pre><code>[ansible@master ~]$ ssh-copy-id ansible@192.168.3.102
+/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/ansible/.ssh/id_rsa.pub"
+The authenticity of host '192.168.3.102 (192.168.3.102)' can't be established.
+ECDSA key fingerprint is SHA256:8o4nL7xITfSqHBMj+fMSuv2dG6RMdDE/9JYEfRN67iM.
+ECDSA key fingerprint is MD5:a5:37:fb:ec:39:09:3d:44:61:82:08:3e:c3:1f:e3:7a.
+Are you sure you want to continue connecting (yes/no)? yes
+/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+
+  _     _   _             _
+ | |   | | | |           | |
+ | |__ | |_| |_ _ __   __| |
+ | '_ \| __| __| '_ \ / _` |
+ | | | | |_| |_| |_) | (_| |
+ |_| |_|\__|\__| .__/ \__,_|
+               | |
+               |_|
+
+ansible@192.168.3.102's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'ansible@192.168.3.102'"
+and check to make sure that only the key(s) you wanted were added.
+</code></pre>
+
+<h2 id="testen">TESTEN</h2>
+
+<p>op master</p>
+
+<pre><code>su ansible; cd
+ansible -m ping all
+</code></pre>
+
+<pre><code>[ansible@master ~]$ ansible -m ping all
+httpd | SUCCESS =&gt; {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+[ansible@master ~]$
+</code></pre>
+
+<h3 id="links">links</h3>
+
+<p><a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-centos-7">Digital Ocean</a></p>
+
+
+			</div>
+			<div class="d-none d-lg-block col-lg-3 col-xl-1 pt-4" id="titles">
+			</div>
+		</div>
+		<script src="/assets/js/zepto.min.js"></script>
+<script src="/assets/js/lunar.min.js"></script>
+<script src="/assets/js/prism.min.js"></script>
+<script src="/assets/js/database.js"></script>
+<script src="/assets/js/search.js"></script>
+<script src="/assets/js/mobile-navigation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $("img").addClass("img-fluid")
+    $("table").addClass("table table-hover")
+
+
+    $(document).ready(function () {
+        result = "";
+        list = $("h1[data-side], h2[data-side], h3[data-side], h4[data-side]")
+        list.each(function () {
+            indent = ($(this).prop("tagName").substring(1)) - 1
+            indent = "&nbsp;&nbsp;".repeat(indent)
+            result += indent + "<a href='#" + this.id + "''>" + $(this).data("side") + "</a><br>"
+        })
+        $("#titles").html(result)
+
+
+
+    });
+</script>
+</body>
+
+</html>

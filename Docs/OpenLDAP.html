@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>OpenLDAP</title>
+  <meta name="description" content="Documentation for small projects">
+
+	<link rel="icon" href="/assets/images/favicon.png">
+  <link rel="canonical" href="https://github.com/alexander-heimbuch/millidocs/Docs/OpenLDAP.html">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="/assets/css/httphp.css">
+
+</head>
+
+
+<body>
+	<div>
+		<div class="bg-secondary p-0" id="sidebar">
+	<div class="sidebar-mobile">
+		<!-- <img src="/assets/images/menu.svg" class="menu-icon" id="menu" />
+		<img src="/assets/images/close.svg" class="close-icon" id="close" /> -->
+	</div>
+	<a href="/"><img class="img-fluid p-2 py-3 bg-own " src="/assets/images/httphp.png" /></a>
+	<div class="">
+		<ul class="nav flex-column">							<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/CentOS.html">					Centos				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Ansible.html">					Ansible				</a>							</li>												<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2%20copy.html">					children				</a>							</li>											<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2.html">					child				</a>							</li>											<li class="nav-item">				<a class="nav-link pb-0 pt-3 active" href="/Docs/OpenLDAP.html">					OpenLDAP				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/inventory.html">					Inventory				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/github-pages.html">					Github Pages				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Borg.html">					Borg				</a>							</li>																	</ul>
+
+	</div>
+</div>
+		<div id="main" class="row mr-0">
+			<div class="col-12 col-lg-9  col-xl-10 pt-4 pl-6">
+				<h1 id="openldap">OpenLDAP</h1>
+
+<h2 data-side="Installeren" id="installeren">Installeren</h2>
+
+<p>openldap van repository downloaden</p>
+<pre><code>yum -y install openldap openldap-servers openldap-clients
+</code></pre>
+
+<p>openldap starten en enablen</p>
+<pre><code>systemctl enable slapd
+systemctl start slapd
+systemctl status slapd
+</code></pre>
+
+<p>maak directory om eenvoudig te werken</p>
+
+<pre><code>mkdir /ldap
+cd /ldap
+</code></pre>
+
+<p>random wachtwoord genereren en omzetten naar ldap root password</p>
+<pre><code>slappasswd
+New password: ***
+Re-enter new password: ***
+{SSHA}mzEx3Pw1xrqi***
+</code></pre>
+
+<h2 data-side="configureren" id="openldap-configueren">openldap configueren</h2>
+
+<h3 data-side="Admin instellen" id="maak-databaseldif-bestand-aan-in-directroy-en-past">maak database.ldif bestand aan in directroy en past</h3>
+
+<pre><code class="language-file">dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: &lt;DOMAIN NAME&gt;
+ 
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcRootDN
+olcRootDN: &lt;ROOT VAN DOMAIN &gt;
+ 
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcRootPW
+olcRootPW: &lt;HASHED PWD VAN ROOT&gt;
+</code></pre>
+
+<h4 id="vervang-de-waarde-naar-de-gewenste-info">Vervang de waarde naar de gewenste info</h4>
+
+<pre><code>dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: dc=httphp,dc=local
+
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcRootDN
+olcRootDN: cn=ldapadmin,dc=httphp,dc=local
+
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcRootPW
+olcRootPW: {SSHA}vNkky70REsznqT9DV+LsYK2TGIsKwPA8
+</code></pre>
+<h3 id="aanpassingen-doorvoeren-in-ldap">Aanpassingen doorvoeren in LDAP</h3>
+<pre><code>ldapmodify -Y EXTERNAL -H ldapi:/// -f database.ldif
+</code></pre>
+
+<pre><code class="language-ouput">[root@master ldap]# ldapmodify -Y EXTERNAL -H ldapi:/// -f database.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+modifying entry "olcDatabase={2}hdb,cn=config"
+
+modifying entry "olcDatabase={2}hdb,cn=config"
+
+modifying entry "olcDatabase={2}hdb,cn=config"
+
+[root@master ldap]#
+</code></pre>
+
+<h3 data-side="Rechten aanpassen" id="rechten-aanpassen">Rechten aanpassen</h3>
+
+<p>maak rights.ldif en past</p>
+<pre><code class="language-file">dn: olcDatabase={1}monitor,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external, cn=auth" read by dn.base="cn=ldapadm,dc=field,dc=linuxhostsupport,dc=com" read by * none
+</code></pre>
+
+<p>wijzigen naar gewenste gegevens</p>
+<pre><code>dn: olcDatabase={1}monitor,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external, cn=auth" read by dn.base="cn=ldapadmin,dc=httphp,dc=local" read by * none
+</code></pre>
+
+<h3 id="wijzigen-van-rechten-doorvoeren">wijzigen van rechten doorvoeren</h3>
+
+<pre><code>ldapmodify -Y EXTERNAL -H ldapi:/// -f rights.ldif
+</code></pre>
+
+<pre><code class="language-ouput">[root@master ldap]# ldapmodify -Y EXTERNAL -H ldapi:/// -f rights.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+modifying entry "olcDatabase={1}monitor,cn=config"
+</code></pre>
+
+<h2 data-side="database opvullen" id="ldap-datbase-instellen">LDAP Datbase instellen</h2>
+
+<p>we hebben momenteel enkel een lege database.</p>
+
+<h4 id="sample-database-configuratie-kopieren">Sample database configuratie kopieren</h4>
+<pre><code>cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+chown -R ldap:ldap /var/lib/ldap
+</code></pre>
+
+<h4 data-side="schema's toevoegen" id="standaard-schemas-aan-database-toevoegen">standaard schema’s aan database toevoegen</h4>
+
+<pre><code>ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+</code></pre>
+
+<pre><code class="language-output">[root@master ldap]# ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+adding new entry "cn=cosine,cn=schema,cn=config"
+
+[root@master ldap]# ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+adding new entry "cn=nis,cn=schema,cn=config"
+
+[root@master ldap]# ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+adding new entry "cn=inetorgperson,cn=schema,cn=config"
+</code></pre>
+
+<h3 data-side="Structuur aanmaken" id="domain--structuur-instellen">domain &amp; structuur instellen</h3>
+
+<p>maak base.ldif aan en past</p>
+<pre><code class="language-file">dn: dc=httphp,dc=local
+dc: httphp
+objectClass: top
+objectClass: domain
+
+dn: cn=ldapadmin,dc=httphp,dc=local
+objectClass: organizationalRole
+cn: ldapadm
+description: LDAP Manager
+
+dn: ou=users,dc=httphp,dc=local
+objectClass: organizationalUnit
+ou: users
+
+dn: ou=groups,dc=httphp,dc=local
+objectClass: organizationalUnit
+ou: groups
+
+dn: cn=users,ou=groups,dc=httphp,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 1501
+
+dn: cn=junior,ou=groups,dc=httphp,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 1502
+
+dn: cn=staff,ou=groups,dc=httphp,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 1503
+
+dn: cn=admins,ou=groups,dc=httphp,dc=local
+objectClass: top
+objectClass: posixGroup
+gidNumber: 1504
+
+</code></pre>
+
+<h3 id="wijzigingen-doorvoeren">wijzigingen doorvoeren</h3>
+<pre><code>ldapadd -x -W -D "cn=ldapadmin,dc=httphp,dc=local" -f base.ldif
+</code></pre>
+
+<pre><code class="language-output">[root@master ldap]# ldapadd -x -W -D "cn=ldapadmin,dc=httphp,dc=local" -f base.ldif
+Enter LDAP Password:
+adding new entry "dc=httphp,dc=local"
+adding new entry "cn=ldapadmin,dc=httphp,dc=local"
+adding new entry "ou=users,dc=httphp,dc=local"
+adding new entry "ou=groups,dc=httphp,dc=local"
+adding new entry "cn=users,ou=groups,dc=httphp,dc=local"
+adding new entry "cn=junior,ou=groups,dc=httphp,dc=local"
+adding new entry "cn=staff,ou=groups,dc=httphp,dc=local"
+adding new entry "cn=admins,ou=groups,dc=httphp,dc=local"
+</code></pre>
+
+<h2 data-side="Firewall" id="ldap-port-389-openen">LDAP PORT 389 openen</h2>
+
+<pre><code>firewall-cmd --zone=public --add-port=389/tcp --permanent
+firewall-cmd --reload
+</code></pre>
+
+<h2 data-side="GUI jXplorer" id="ldap-bekijken-in-gui">LDAP bekijken in GUI</h2>
+
+<p>We kunnen de inhoud van de LDAP database bekijken via verschillende programmas.</p>
+
+<p><a href="http://jxplorer.org/downloads/users.html">download jXplorer</a></p>
+
+<p>download jExplorer en installeer.</p>
+
+<p><img src="/assets/images/jXplorer_login.png" alt="" /></p>
+
+<p><img src="/assets/images/jXplorer_tree.png" alt="" /></p>
+
+<pre><code>
+dn: uid=test,ou=users,dc=httphp,dc=local
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: test
+sn: Linux
+userPassword: {SSHA}ofnbY6UwV+DhkS7oGR4/o9DcU2eCWqYd
+loginShell: /bin/bash
+uidNumber: 1001
+gidNumber: 1501
+homeDirectory: /webfiles/test
+
+
+
+</code></pre>
+
+<h2 data-side="links" id="links">links</h2>
+
+<ul>
+  <li><a href="https://likegeeks.com/linux-ldap-server/">LikeGeeks</a></li>
+  <li><a href="https://linuxhostsupport.com/blog/how-to-install-ldap-on-centos-7/">LinuxHost</a></li>
+</ul>
+
+
+			</div>
+			<div class="d-none d-lg-block col-lg-3 col-xl-1 pt-4" id="titles">
+			</div>
+		</div>
+		<script src="/assets/js/zepto.min.js"></script>
+<script src="/assets/js/lunar.min.js"></script>
+<script src="/assets/js/prism.min.js"></script>
+<script src="/assets/js/database.js"></script>
+<script src="/assets/js/search.js"></script>
+<script src="/assets/js/mobile-navigation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $("img").addClass("img-fluid")
+    $("table").addClass("table table-hover")
+
+
+    $(document).ready(function () {
+        result = "";
+        list = $("h1[data-side], h2[data-side], h3[data-side], h4[data-side]")
+        list.each(function () {
+            indent = ($(this).prop("tagName").substring(1)) - 1
+            indent = "&nbsp;&nbsp;".repeat(indent)
+            result += indent + "<a href='#" + this.id + "''>" + $(this).data("side") + "</a><br>"
+        })
+        $("#titles").html(result)
+
+
+
+    });
+</script>
+</body>
+
+</html>

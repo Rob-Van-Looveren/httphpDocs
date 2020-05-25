@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Centos</title>
+  <meta name="description" content="Documentation for small projects">
+
+	<link rel="icon" href="/assets/images/favicon.png">
+  <link rel="canonical" href="https://github.com/alexander-heimbuch/millidocs/Docs/CentOS.html">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="/assets/css/httphp.css">
+
+</head>
+
+
+<body>
+	<div>
+		<div class="bg-secondary p-0" id="sidebar">
+	<div class="sidebar-mobile">
+		<!-- <img src="/assets/images/menu.svg" class="menu-icon" id="menu" />
+		<img src="/assets/images/close.svg" class="close-icon" id="close" /> -->
+	</div>
+	<a href="/"><img class="img-fluid p-2 py-3 bg-own " src="/assets/images/httphp.png" /></a>
+	<div class="">
+		<ul class="nav flex-column">							<li class="nav-item">				<a class="nav-link pb-0 pt-3 active" href="/Docs/CentOS.html">					Centos				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Ansible.html">					Ansible				</a>							</li>												<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2%20copy.html">					children				</a>							</li>											<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2.html">					child				</a>							</li>											<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/OpenLDAP.html">					OpenLDAP				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/inventory.html">					Inventory				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/github-pages.html">					Github Pages				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Borg.html">					Borg				</a>							</li>																	</ul>
+
+	</div>
+</div>
+		<div id="main" class="row mr-0">
+			<div class="col-12 col-lg-9  col-xl-10 pt-4 pl-6">
+				<h1 id="centos-7">CentOS 7</h1>
+
+<p>We downloaden een ISO image voor CentOs 7 in dit geval gebruiken we onderstaande image.</p>
+<pre><code>CentOS-7-x86_64-Everything-1908.iso
+</code></pre>
+
+<p>Default machine specs</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>item</th>
+      <th>waarde</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RAM</td>
+      <td>4GB</td>
+    </tr>
+    <tr>
+      <td>CPU</td>
+      <td>4 cores</td>
+    </tr>
+    <tr>
+      <td>Disk</td>
+      <td>32GB</td>
+    </tr>
+    <tr>
+      <td>Network</td>
+      <td>1 NIC op 192.168.3.0/24</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Na dat we de volledige installatie hebben doorlopen conveteren we deze VM naar een Template.</p>
+
+<p>eerst yum update -y 
+alle packages worden geupdate –&gt; duurt lang, niet telkens opnieuw doen.</p>
+
+
+			</div>
+			<div class="d-none d-lg-block col-lg-3 col-xl-1 pt-4" id="titles">
+			</div>
+		</div>
+		<script src="/assets/js/zepto.min.js"></script>
+<script src="/assets/js/lunar.min.js"></script>
+<script src="/assets/js/prism.min.js"></script>
+<script src="/assets/js/database.js"></script>
+<script src="/assets/js/search.js"></script>
+<script src="/assets/js/mobile-navigation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $("img").addClass("img-fluid")
+    $("table").addClass("table table-hover")
+
+
+    $(document).ready(function () {
+        result = "";
+        list = $("h1[data-side], h2[data-side], h3[data-side], h4[data-side]")
+        list.each(function () {
+            indent = ($(this).prop("tagName").substring(1)) - 1
+            indent = "&nbsp;&nbsp;".repeat(indent)
+            result += indent + "<a href='#" + this.id + "''>" + $(this).data("side") + "</a><br>"
+        })
+        $("#titles").html(result)
+
+
+
+    });
+</script>
+</body>
+
+</html>

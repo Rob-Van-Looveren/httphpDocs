@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Inventory</title>
+  <meta name="description" content="Documentation for small projects">
+
+	<link rel="icon" href="/assets/images/favicon.png">
+  <link rel="canonical" href="https://github.com/alexander-heimbuch/millidocs/Docs/inventory.html">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="/assets/css/httphp.css">
+
+</head>
+
+
+<body>
+	<div>
+		<div class="bg-secondary p-0" id="sidebar">
+	<div class="sidebar-mobile">
+		<!-- <img src="/assets/images/menu.svg" class="menu-icon" id="menu" />
+		<img src="/assets/images/close.svg" class="close-icon" id="close" /> -->
+	</div>
+	<a href="/"><img class="img-fluid p-2 py-3 bg-own " src="/assets/images/httphp.png" /></a>
+	<div class="">
+		<ul class="nav flex-column">							<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/CentOS.html">					Centos				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Ansible.html">					Ansible				</a>							</li>												<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2%20copy.html">					children				</a>							</li>											<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2.html">					child				</a>							</li>											<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/OpenLDAP.html">					OpenLDAP				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 active" href="/Docs/inventory.html">					Inventory				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/github-pages.html">					Github Pages				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Borg.html">					Borg				</a>							</li>																	</ul>
+
+	</div>
+</div>
+		<div id="main" class="row mr-0">
+			<div class="col-12 col-lg-9  col-xl-10 pt-4 pl-6">
+				<h1 id="pwd">pwd</h1>
+<p>root=password</p>
+
+<p>ansible=ansible</p>
+
+<p>ldap= GS!lT74ryPl2H@RmVcsN</p>
+
+<p>ldap={SSHA}vNkky70REsznqT9DV+LsYK2TGIsKwPA8</p>
+
+<h3 id="ansible---ldap">Ansible - LDAP</h3>
+
+<p>ID          101
+IP          192.168.3.101
+hostname    master</p>
+
+<h3 id="httpd">httpd</h3>
+
+<p>ID          102
+IP          192.168.3.102
+hostname    httpd</p>
+
+<h4 id="ansible">Ansible</h4>
+<ul>
+  <li>nfsclient.yaml</li>
+  <li>httpd.yaml</li>
+</ul>
+
+<h3 id="vsftpd">VSFTPD</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td>ID</td>
+      <td>103</td>
+    </tr>
+    <tr>
+      <td>IP</td>
+      <td>192.168.3.103</td>
+    </tr>
+    <tr>
+      <td>hostname</td>
+      <td>vsfpd</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="ansible-1">Ansible</h4>
+<ul>
+  <li>nfsServer.yaml</li>
+  <li>vsftpd.yaml</li>
+  <li>ldapclient.yaml</li>
+</ul>
+
+<h3 id="mariadb">MariaDB</h3>
+
+<p>ID          104
+IP          192.168.3.104
+hostname    mariadb</p>
+
+<h4 id="ansible-2">Ansible</h4>
+<ul>
+  <li>password=”password”
+echo -e “$password\ny\nn\ny\ny\ny\ny” | ./usr/bin/mysql_secure_installation
+password=”echo -e \e[5m\e[93mnice try!\e[25m\n\e[32midentity theft is not a joke\e[36m -Jim\e[39m”</li>
+</ul>
+
+<p>echo -e “
+pwd\n     Enter current password for root 
+y\n       Switch to Unix socket
+n\n       Change root pwd  <br />
+y\n       Remove Anon user
+y\n       Disallow remote root login
+y\n       Remove test database
+y”        reload priviliges table</p>
+
+<h2 data-side="Docker" id="docker">docker</h2>
+
+<p>ID          105
+IP          192.168.3.105
+hostname    docker</p>
+
+<h3 id="ansible-3">ansible</h3>
+<ul>
+  <li>Docker.yaml</li>
+</ul>
+
+<h2 data-side="lol" id="gitlab">gitlab</h2>
+
+<p>ID          106
+IP          192.168.3.106
+hostname    gitlab</p>
+
+<h4 id="ansible-4">Ansible</h4>
+<ul>
+  <li>gitlab.yaml</li>
+  <li>go to config</li>
+  <li>gitlab_copyConfig.yaml</li>
+</ul>
+
+<h3 id="config">config</h3>
+<ul>
+  <li>go tu url</li>
+  <li>set password</li>
+  <li>password</li>
+  <li>login with root &amp; pwd</li>
+  <li>open</li>
+</ul>
+
+<h2 id="zammad">zammad</h2>
+<p>Docker 
+run zammad.yaml
+:80</p>
+
+<ul>
+  <li>maak nieuw systeem aan</li>
+  <li>Maak admin account aan
+    <ul>
+      <li>admin@admin.be</li>
+      <li>password</li>
+    </ul>
+  </li>
+  <li>geef naam en logo in</li>
+  <li>oke &amp; overslaan</li>
+  <li>tandwiel</li>
+  <li>systeem –&gt; integratie –&gt; ldap</li>
+  <li>turn on –&gt; instellen
+server|ldap://192.168.3.101
+bind gebruiker | cn=ldapadmin,dc=httphp,dc=local
+bind wachtwoord | <em>**</em></li>
+</ul>
+
+<p>user mapping</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>uid</td>
+      <td>login</td>
+    </tr>
+    <tr>
+      <td>givenname</td>
+      <td>firstname</td>
+    </tr>
+    <tr>
+      <td>sn</td>
+      <td>lastname</td>
+    </tr>
+    <tr>
+      <td>mail</td>
+      <td>email</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="roll-mapping">roll mapping</h5>
+
+<table>
+  <tbody>
+    <tr>
+      <td>cn=users,ou=groups,dc=httphp,dc=local</td>
+      <td>customer</td>
+    </tr>
+    <tr>
+      <td>cn=junior,ou=groups,dc=httphp,dc=local</td>
+      <td>agent</td>
+    </tr>
+    <tr>
+      <td>cn=staff,ou=groups,dc=httphp,dc=local</td>
+      <td>agent</td>
+    </tr>
+    <tr>
+      <td>cn=admins,ou=groups,dc=httphp,dc=local</td>
+      <td>admin</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="knowledge-base">knowledge base</h3>
+<ul>
+  <li>zamad tandwiel –&gt; beheer –&gt; knowledge base</li>
+  <li>sidebar knowledge base
+    <ul>
+      <li>start editing</li>
+      <li>pass title aan</li>
+      <li>voeg categorien toe</li>
+    </ul>
+  </li>
+  <li>tandwiel –&gt; instellingen –&gt; beveiliging  wachtwoord vergeten uit zetten</li>
+</ul>
+
+<h2 id="bitwarden">bitwarden</h2>
+<p>docker
+run bitwarden.yaml
+:443</p>
+
+<p>bash ./bitwarden.sh install
+url
+n
+hostid
+key
+n
+y</p>
+
+<p>edit bwdata/config.yaml
+remove http 80</p>
+
+<p>bash ./bitwarden.sh update</p>
+
+<p>make account
+p?D=!hxsMz3SrXn</p>
+
+<h2 id="owncloud">owncloud</h2>
+<p>:8080
+admin pwd: password</p>
+
+<ul>
+  <li>run ownCloud.yaml</li>
+  <li>IP:8080 login</li>
+  <li>settings –&gt; apps –&gt; show disabled apps –&gt; enable LDAP integration</li>
+  <li>reload page</li>
+  <li>side bar –&gt; user authentication</li>
+</ul>
+
+<p>[SERVER]</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>server</td>
+      <td>192.168.3.101</td>
+    </tr>
+    <tr>
+      <td>port</td>
+      <td>389</td>
+    </tr>
+    <tr>
+      <td>user DN</td>
+      <td>cn=ldapadmin,dc=httphp,dc=local</td>
+    </tr>
+    <tr>
+      <td>pwd</td>
+      <td><strong>**</strong><strong>**</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>[USERS]</p>
+<ul>
+  <li>inetOrgPerson</li>
+  <li>all groups</li>
+</ul>
+
+<p>[Login Attributes]</p>
+<ul>
+  <li>ldap username</li>
+  <li>ldap email</li>
+</ul>
+
+<p>[GROUPS]</p>
+<ul>
+  <li>PossixGroups</li>
+  <li>alle groepen</li>
+</ul>
+
+<p>[EXPERT]
+Override UUID detection</p>
+<ul>
+  <li>UUID Attribute for Users</li>
+</ul>
+
+<h2 id="cachet">cachet</h2>
+<p>:8008</p>
+<ul>
+  <li>
+    <p>run cachet.yaml</p>
+  </li>
+  <li>go to IP:8008</li>
+  <li>complete setup</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>root</td>
+          <td>password</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h1 id="zabbix">zabbix</h1>
+<p>ID          107   <br />
+IP          192.168.3.107
+hostname    zabbix</p>
+
+<h2 id="asible">asible</h2>
+<ul>
+  <li>
+    <p>ZabbixServer.yaml</p>
+  </li>
+  <li>go to http://IP/zabbix</li>
+  <li>next</li>
+  <li>next</li>
+  <li>sql password van ansible.yaml file –&gt; zabbix1234</li>
+  <li>vul IP in bij host</li>
+  <li>name: zabbix-httphp</li>
+  <li>
+    <p>next tot einde</p>
+  </li>
+  <li>login met</li>
+  <li>Admin (a-&gt;A)</li>
+  <li>zabbix</li>
+</ul>
+
+<p># borg
+ID          108   <br />
+IP          192.168.3.108
+hostname    backup</p>
+
+<h1 id="proxy">proxy</h1>
+
+<h1 id="ssl">ssl</h1>
+
+<h1 id="dns">dns</h1>
+
+
+			</div>
+			<div class="d-none d-lg-block col-lg-3 col-xl-1 pt-4" id="titles">
+			</div>
+		</div>
+		<script src="/assets/js/zepto.min.js"></script>
+<script src="/assets/js/lunar.min.js"></script>
+<script src="/assets/js/prism.min.js"></script>
+<script src="/assets/js/database.js"></script>
+<script src="/assets/js/search.js"></script>
+<script src="/assets/js/mobile-navigation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $("img").addClass("img-fluid")
+    $("table").addClass("table table-hover")
+
+
+    $(document).ready(function () {
+        result = "";
+        list = $("h1[data-side], h2[data-side], h3[data-side], h4[data-side]")
+        list.each(function () {
+            indent = ($(this).prop("tagName").substring(1)) - 1
+            indent = "&nbsp;&nbsp;".repeat(indent)
+            result += indent + "<a href='#" + this.id + "''>" + $(this).data("side") + "</a><br>"
+        })
+        $("#titles").html(result)
+
+
+
+    });
+</script>
+</body>
+
+</html>

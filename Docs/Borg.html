@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Borg</title>
+  <meta name="description" content="Documentation for small projects">
+
+	<link rel="icon" href="/assets/images/favicon.png">
+  <link rel="canonical" href="https://github.com/alexander-heimbuch/millidocs/Docs/Borg.html">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="/assets/css/httphp.css">
+
+</head>
+
+
+<body>
+	<div>
+		<div class="bg-secondary p-0" id="sidebar">
+	<div class="sidebar-mobile">
+		<!-- <img src="/assets/images/menu.svg" class="menu-icon" id="menu" />
+		<img src="/assets/images/close.svg" class="close-icon" id="close" /> -->
+	</div>
+	<a href="/"><img class="img-fluid p-2 py-3 bg-own " src="/assets/images/httphp.png" /></a>
+	<div class="">
+		<ul class="nav flex-column">							<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/CentOS.html">					Centos				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/Ansible.html">					Ansible				</a>							</li>												<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2%20copy.html">					children				</a>							</li>											<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/Docs/sub1/test2.html">					child				</a>							</li>											<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/OpenLDAP.html">					OpenLDAP				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/inventory.html">					Inventory				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/Docs/github-pages.html">					Github Pages				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 active" href="/Docs/Borg.html">					Borg				</a>							</li>																	</ul>
+
+	</div>
+</div>
+		<div id="main" class="row mr-0">
+			<div class="col-12 col-lg-9  col-xl-10 pt-4 pl-6">
+				<h1 id="borg-backup">Borg backup</h1>
+<h1 id="borgmatic">Borgmatic</h1>
+
+<ul>
+  <li>run ansible playbook to install borg on backup server</li>
+  <li>mkdir /backups</li>
+  <li>
+    <p>chown ansible:ansible /backups</p>
+  </li>
+  <li>generate ssh keys for root on host</li>
+  <li>
+    <p>ssh-copy-id ansible@192.168.3.108</p>
+  </li>
+  <li>install borg on host</li>
+  <li>generate-borgmatic-config</li>
+  <li>set direcroty’s to backup</li>
+  <li>set remote repo
+    <ul>
+      <li>ansible@192.168.3.108:/backups/httpd</li>
+    </ul>
+  </li>
+  <li>set storige section</li>
+  <li>set retention</li>
+  <li>borg init -e repokey ansible@192.168.3.108:/backups/httpd
+    <ul>
+      <li>enter repo key</li>
+      <li>export key –&gt; borg key export ansible@192.168.3.108:/backups/httpd ./key.txt</li>
+    </ul>
+  </li>
+  <li>
+    <p>zet repokey in config /etc/bormatic/config.yaml</p>
+  </li>
+  <li></li>
+</ul>
+
+<p>0 * * * * root /usr/local/bin/borgmatic –syslog-verbosity 1</p>
+
+<ul>
+  <li>name: Ensure a job that runs at 2 and 5 exists. Creates an entry like “0 5,2 * * ls -alh &gt; /dev/null”
+cron:
+  name: “check dirs”
+  minute: “0”
+  hour: “5,2”
+  job: “ls -alh &gt; /dev/null”</li>
+</ul>
+
+<p>sudo yum install ntp
+sudo systemctl enable ntpd
+sudo systemctl start ntpd</p>
+
+
+			</div>
+			<div class="d-none d-lg-block col-lg-3 col-xl-1 pt-4" id="titles">
+			</div>
+		</div>
+		<script src="/assets/js/zepto.min.js"></script>
+<script src="/assets/js/lunar.min.js"></script>
+<script src="/assets/js/prism.min.js"></script>
+<script src="/assets/js/database.js"></script>
+<script src="/assets/js/search.js"></script>
+<script src="/assets/js/mobile-navigation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $("img").addClass("img-fluid")
+    $("table").addClass("table table-hover")
+
+
+    $(document).ready(function () {
+        result = "";
+        list = $("h1[data-side], h2[data-side], h3[data-side], h4[data-side]")
+        list.each(function () {
+            indent = ($(this).prop("tagName").substring(1)) - 1
+            indent = "&nbsp;&nbsp;".repeat(indent)
+            result += indent + "<a href='#" + this.id + "''>" + $(this).data("side") + "</a><br>"
+        })
+        $("#titles").html(result)
+
+
+
+    });
+</script>
+</body>
+
+</html>
