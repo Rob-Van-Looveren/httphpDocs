@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>OPS Report Cards</title>
+  <meta name="description" content="Documentation for small projects">
+
+	<link rel="icon" href="/httphpDocs/assets/images/favicon.png">
+  <link rel="canonical" href="/httphpDocs/Docs/OPS%20cards.html">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="/httphpDocs/assets/css/httphp.css">
+
+</head>
+
+
+<body>
+	<div>
+		<div class="bg-secondary p-0" id="sidebar">
+	<div class="sidebar-mobile">
+		<!-- <img src="/httphpDocs/assets/images/menu.svg" class="menu-icon" id="menu" />
+		<img src="/httphpDocs/assets/images/close.svg" class="close-icon" id="close" /> -->
+	</div>
+	<a href="/httphpDocs/"><img class="img-fluid p-2 py-3 bg-own " src="/httphpDocs/assets/images/httphp.png" /></a>
+	<div class="">
+		<ul class="nav flex-column">							<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/CentOS.html">					Centos				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 active" href="/httphpDocs/Docs/OPS%20cards.html">					OPS Report Cards				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/OpenLDAP%20copy.html">					OpenLDAP				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/inventory.html">					Inventory				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/Borg.html">					Borg				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/Ansible.html">					Ansible				</a>							</li>												<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/httphpDocs/Docs/sub1/test2%20copy.html">					children				</a>							</li>											<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/httphpDocs/Docs/sub1/test2.html">					child				</a>							</li>						</ul>
+
+	</div>
+</div>
+		<div id="main" class="row mr-0">
+			<div class="col-12 col-lg-9  col-xl-10 pt-4 pl-6">
+				<h1 id="ops-report-cards">OPS Report Cards</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>OPS</th>
+      <th>Waar</th>
+      <th>Info</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1. Ticket System</td>
+      <td>Zammad</td>
+      <td>User &amp; Interne Tickets, Helpdesk, Knodleddge Base, LDAP login</td>
+    </tr>
+    <tr>
+      <td>3. Metrics</td>
+      <td>Zabbix</td>
+      <td>Host monitoring, In LDAP kunnen we dan # users zien</td>
+    </tr>
+    <tr>
+      <td>5. Password Safe</td>
+      <td>Bitwarden</td>
+      <td>Selfhosted Password Vault (Betaalde versie heeft LDAP login)</td>
+    </tr>
+    <tr>
+      <td>6. Source Control</td>
+      <td>Gitlab</td>
+      <td>Prive &amp; publieke Repo’s, interne repo’s, met ldap login</td>
+    </tr>
+    <tr>
+      <td>7. Bug Tracking</td>
+      <td>Gitlab &amp; Zammad</td>
+      <td>Gitlab heeft ‘Issues’ functie om bugs te tracken</td>
+    </tr>
+    <tr>
+      <td>16. automation</td>
+      <td>Ansible</td>
+      <td>Met ansible kunnen we hosts vanaf 0 configureren of taken automatiseren (vhosts instellen,…)</td>
+    </tr>
+    <tr>
+      <td>25. Backups</td>
+      <td>Borg Backup</td>
+      <td>Met borg &amp; Borgmatic kunnen we backups nemen, configurern en automatiseren</td>
+    </tr>
+    <tr>
+      <td>31 Password change</td>
+      <td>OpenLDAP</td>
+      <td>Via openLDAP kunnen op 1 centrale plaats users beheren en dus enable/disabelen en password veranderen</td>
+    </tr>
+  </tbody>
+</table>
+
+
+			</div>
+			<div class="d-none d-lg-block col-lg-3 col-xl-1 pt-4" id="titles">
+			</div>
+		</div>
+		<script src="/httphpDocs/assets/js/zepto.min.js"></script>
+<script src="/httphpDocs/assets/js/lunar.min.js"></script>
+<script src="/httphpDocs/assets/js/prism.min.js"></script>
+<script src="/httphpDocs/assets/js/database.js"></script>
+<script src="/httphpDocs/assets/js/search.js"></script>
+<script src="/httphpDocs/assets/js/mobile-navigation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $("img").addClass("img-fluid")
+    $("table").addClass("table table-hover")
+
+
+    $(document).ready(function () {
+        result = "";
+        list = $("h1[data-side], h2[data-side], h3[data-side], h4[data-side]")
+        list.each(function () {
+            indent = ($(this).prop("tagName").substring(1)) - 1
+            indent = "&nbsp;&nbsp;".repeat(indent)
+            result += indent + "<a href='#" + this.id + "''>" + $(this).data("side") + "</a><br>"
+        })
+        $("#titles").html(result)
+
+
+
+    });
+</script>
+</body>
+
+</html>

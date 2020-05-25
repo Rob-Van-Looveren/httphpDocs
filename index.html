@@ -24,9 +24,9 @@
 		<!-- <img src="/httphpDocs/assets/images/menu.svg" class="menu-icon" id="menu" />
 		<img src="/httphpDocs/assets/images/close.svg" class="close-icon" id="close" /> -->
 	</div>
-	<a href="/"><img class="img-fluid p-2 py-3 bg-own " src="/httphpDocs/assets/images/httphp.png" /></a>
+	<a href="/httphpDocs/"><img class="img-fluid p-2 py-3 bg-own " src="/httphpDocs/assets/images/httphp.png" /></a>
 	<div class="">
-		<ul class="nav flex-column">							<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/CentOS.html">					Centos				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/Ansible.html">					Ansible				</a>							</li>												<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/httphpDocs/Docs/sub1/test2%20copy.html">					children				</a>							</li>											<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/httphpDocs/Docs/sub1/test2.html">					child				</a>							</li>											<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/OpenLDAP.html">					OpenLDAP				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/inventory.html">					Inventory				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/github-pages.html">					Github Pages				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/Borg.html">					Borg				</a>							</li>																	</ul>
+		<ul class="nav flex-column">							<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/CentOS.html">					Centos				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/OPS%20cards.html">					OPS Report Cards				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/OpenLDAP%20copy.html">					OpenLDAP				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/inventory.html">					Inventory				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/Borg.html">					Borg				</a>							</li>																						<li class="nav-item">				<a class="nav-link pb-0 pt-3 " href="/httphpDocs/Docs/Ansible.html">					Ansible				</a>							</li>												<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/httphpDocs/Docs/sub1/test2%20copy.html">					children				</a>							</li>											<li class="nav-item">				<a class="nav-link pl-4 pt-1 pb-0 " href="/httphpDocs/Docs/sub1/test2.html">					child				</a>							</li>						</ul>
 
 	</div>
 </div>
@@ -34,7 +34,24 @@
 			<div class="col-12 col-lg-9  col-xl-10 pt-4 pl-6">
 				<h2 id="beschrijving">Beschrijving</h2>
 
-<p> </p>
+<ul>
+  <li><a href="#master">Master</a></li>
+  <li><a href="#webserver">Web server</a></li>
+  <li><a href="#ftp">FTP</a></li>
+  <li><a href="#database">Database</a></li>
+  <li><a href="#docker">Docker</a>
+    <ul>
+      <li><a href="#helpdesk">Helpdesk</a></li>
+      <li><a href="#password-vault">Password Vault</a></li>
+      <li><a href="#status">Status</a></li>
+      <li><a href="#cloud">Cloud</a></li>
+    </ul>
+  </li>
+  <li><a href="#monitoring">Monitoring</a></li>
+  <li><a href="#backup">Backup</a></li>
+</ul>
+
+<p><img src="/httphpDocs/assets/images/dia1.png" alt="" /> </p>
 
 <h3 id="master">Master</h3>
 <ul>
@@ -43,13 +60,21 @@
   <li>Mangement applicatie</li>
 </ul>
 
-<p><img src="/assets/images/ansible.png" alt="" /></p>
+<p><img src="/httphpDocs/assets/images/ansible.png" alt="" /> 
+<img src="/httphpDocs/assets/images/openldap.png" alt="" /></p>
 
 <p>Is het hart van het systeem. Vanaf hier worden ansible playbooks uitgevoerd om andere hosts te configueren en instellingen aan te passen.<br />
 Daarnaast worden hier ook user beheerd via OpenLDAP, dit zorgt er voor dat we een centrale service hebben voor het beheren van gebruikers.<br />
 Ten slote draait hier een lokale LAMP stack waarop het management systeem draait</p>
 
-<p><em><strong>Waarom keuze opsplitsing LAMP stack</strong></em></p>
+<p><em><strong>Waarom keuze opsplitsing LAMP stack</strong></em><br />
+<em>Waarom niet alles op 1 machine; web, ftp, database in 1</em><br />
+Eerder als Proof of Concept: 
+Stel je wil een uptime van 99.99%, ook als je onderheid en updates uitvoerd.<br />
+Dus je kiest voor een distributed of Clusterd File system (bv: CephFS of Hadoop). Wat we hier als 1 NFS server voor stellen met ftp toegang.<br />
+Voor de database doe het zelfde (bv:MariaDB Galera Cluster), wat we hier voorstellen als 1 MariaDB server<br />
+Ten slotte heb je nog enkele webservers zodat hier ook redundantie aanwezig is. 
+Als we hier nog een loadbalancer voor plaatsen kunnen we downtime vermijden. <br /></p>
 
 <h3 id="webserver">Webserver</h3>
 <ul>
@@ -57,6 +82,9 @@ Ten slote draait hier een lokale LAMP stack waarop het management systeem draait
   <li>php7.3</li>
   <li>NFS-client</li>
 </ul>
+
+<p><img src="/httphpDocs/assets/images/apache.png" alt="" />
+<img src="/httphpDocs/assets/images/php.png" alt="" /></p>
 
 <p>Hier draait de apache webserver. De webserver heeft een NFS mount naar de webfiles van de gebruikers. <br />
 Momenteel werkt deze webserver ook als reverse proxy voor de services op de docker host. <br />
@@ -70,6 +98,10 @@ Voor SSL is er momenteel een self-signed wildcard certificaat aanwezig.</p>
   <li>LDAP-client</li>
 </ul>
 
+<p><img src="/httphpDocs/assets/images/ftp.png" alt="" />
+<img src="/httphpDocs/assets/images/nfs.png" alt="" />
+<img src="/httphpDocs/assets/images/ldap.png" alt="" /></p>
+
 <p>Op deze machine is een NFS-server aanwezig, Dit zorgt er voor dat de webserver aan de bestanden van de gebruiker kan.<br />
 gebruikers kunnen via FTP bestanden uploaden naar de server. <br />
 Via de LDAP client kunnen gebruiker gegevens geraadpleegt worden en via ftp dus aanmelden. <br /></p>
@@ -80,16 +112,24 @@ Via de LDAP client kunnen gebruiker gegevens geraadpleegt worden en via ftp dus 
   <li>phpMyAdmin</li>
 </ul>
 
+<p><img src="/httphpDocs/assets/images/mariadb.png" alt="" />
+<img src="/httphpDocs/assets/images/phpmyadmin.png" alt="" /></p>
+
 <p>Op de machine draait een recente versie van MariaDB (10.4), en dus niet de default versie 5.5. <br />
 Natuurlijk is phpMyAdmin geinstalleerd om gebruiker eenvoudig toegang te geven. <br /></p>
 
 <h3 id="docker">Docker</h3>
 <p>Op de docker client draaien verschillende containers voor ondersteunende services.</p>
 
+<p><img src="/httphpDocs/assets/images/docker.png" alt="" /></p>
+
 <h5 id="helpdesk">Helpdesk</h5>
 <ul>
   <li>Zammad</li>
 </ul>
+
+<p><img src="/httphpDocs/assets/images/zammad_logo.png" alt="" />
+<img src="/httphpDocs/assets/images/ldap.png" alt="" /></p>
 
 <p>Via Zammad kan je eenvoudig tickets aanmaken. Dankzij de integratie met LDAP kunnen gebruikers gewoon aanmelden met hun account.<br />
 Je kan tickets toewzijzen en in team oplossen alvorens af te sluiten.<br />
@@ -100,6 +140,8 @@ Daarnaast kan je binnen Zammad een knowledge base opstellen, ideaal voor een FAQ
   <li>Bitwarden</li>
 </ul>
 
+<p><img src="/httphpDocs/assets/images/bitwarden.png" alt="" /></p>
+
 <p>Bitwarden is een opensource password vault. Een password manager die je zelf kan hosten. <br />
 Je kan je persoonlijke vault exporteren eenvoudig migreren naar andere Bitwarden instances. <br />
 De Enterprise versie van Bitwarden ondersteunt LDAP integratie.</p>
@@ -109,6 +151,8 @@ De Enterprise versie van Bitwarden ondersteunt LDAP integratie.</p>
   <li>Cachet</li>
 </ul>
 
+<p><img src="/httphpDocs/assets/images/cachet.png" alt="" /></p>
+
 <p>Via cachet kan je een status pagina opstellen. je kan hier de verschillende services tonen met hun bijhorende status.<br />
 Je kan eventueel ook via een API een status aanpassen. <br /></p>
 
@@ -117,6 +161,9 @@ Je kan eventueel ook via een API een status aanpassen. <br /></p>
   <li>ownCloud</li>
 </ul>
 
+<p><img src="/httphpDocs/assets/images/owncloud.png" alt="" />
+<img src="/httphpDocs/assets/images/ldap.png" alt="" /></p>
+
 <p>Via owncloud kan je files uploaden en beheren in de cloud. <br />
 Gebruikers kunnen via LDAP credentials aanmelden. <br /></p>
 
@@ -124,6 +171,9 @@ Gebruikers kunnen via LDAP credentials aanmelden. <br /></p>
 <ul>
   <li>gitlab</li>
 </ul>
+
+<p><img src="/httphpDocs/assets/images/gitlab.png" alt="" />
+<img src="/httphpDocs/assets/images/ldap.png" alt="" /></p>
 
 <p>De bekende tegenhanger van github, de community edition is gratis en kan je zelf hosten<br />
 Gebruikers kunnen aanmelden via hun LDAP credentials <br />
@@ -134,15 +184,19 @@ Ideaal voor gebruiker die een prive Repository willen maar niet willen betalen v
   <li>Zabbix</li>
 </ul>
 
+<p><img src="/httphpDocs/assets/images/zabbix.png" alt="" /></p>
+
 <p>Via Zabbix kunnen we de andere machines en services monitoren. We kunnen hier mee anticiperen bij opkomende problemen zoals schijven die vol lopen. <br />
 Alle machine’s hebben een Zabbix agent die info verzend naar de server. <br />
 Zabbix is zeer uitgebreid en bied veel mogelijkheden, wat ook bijdraagt aan de complexiteit.</p>
 
-<h3 id="backup-server">Backup server</h3>
+<h3 id="backup">Backup</h3>
 <ul>
   <li>Borg Backup</li>
   <li>Borgmatic</li>
 </ul>
+
+<p><img src="/httphpDocs/assets/images/borg.png" alt="" /></p>
 
 <p>Borg is een <code>deduplicating</code> programma om backups te maken. Borg wordt op elke host geinstalleerd via een ansible script. <br />
 Daarnaast maken we gebruik van borgmatic. een wrapper die de configuratie zeer gebruiksvriendelijk maakt. <br />
