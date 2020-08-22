@@ -103,9 +103,11 @@ The key's randomart image is:
   <li>sudo useradd ansible</li>
   <li>sudo usermod -aG wheel ansible</li>
   <li>sudo passwd ansible</li>
-  <li>sed -i ‘s/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/g’ /etc/sudoers
-    <h3 id="op-master">op master</h3>
-  </li>
+  <li>sed -i ‘s/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/g’ /etc/sudoers</li>
+</ul>
+				<h3 id="op-master">op master</h3>
+<ul>
+    
   <li>sudo su - ansible; cd</li>
   <li>sudo nano /etc/ansible/hosts</li>
   <li>slave toevoegen</li>
